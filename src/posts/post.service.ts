@@ -19,6 +19,24 @@ export class PostService {
             this.userService.findOne(email)
         ])
         currentUser.posts.push(newPost.id)
+        await currentUser.save()
         return newPost
+    }
+
+    async getAllPosts() {
+        const posts = await this.postModel.find()
+        return posts
+    }
+
+    async getOnePost(id: string) {
+        return await this.postModel.findById(id)
+    }
+
+    async deleteOnePost(id: string) {
+        return await this.postModel.findByIdAndDelete(id)
+    }
+
+    async updateOnePost(id: string, updatePostDto: createPostDto) {
+        return await this.postModel.findByIdAndUpdate(id, updatePostDto)
     }
 }

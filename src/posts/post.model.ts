@@ -10,6 +10,8 @@ export class Post {
     userEmail: string
     @Prop()
     img: [string]
+    @Prop()
+    commentsId: [string]
 }
 const PostSchema = SchemaFactory.createForClass(Post)
 
