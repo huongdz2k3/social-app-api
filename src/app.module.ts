@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CommnetModule } from './commnets/cmt.module';
 import { PostModule } from './posts/post.module';
+import { FriendsReqModule } from './users/friendsreq/friendsreq.module';
 import { UserModule } from './users/user.module';
 
 @Module({
@@ -13,7 +14,8 @@ import { UserModule } from './users/user.module';
     AuthModule,
     UserModule,
     PostModule,
-    CommnetModule
+    CommnetModule,
+    FriendsReqModule
   ],
   controllers: [AppController],
   providers: [AppService],

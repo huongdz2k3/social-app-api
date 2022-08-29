@@ -18,6 +18,8 @@ export class User {
     avatar: string
     @Prop()
     posts: [string]
+    @Prop()
+    friends: [string]
 }
 const UserSchema = SchemaFactory.createForClass(User)
 

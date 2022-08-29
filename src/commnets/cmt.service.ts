@@ -23,8 +23,8 @@ export class CommnetService {
     }
 
     async getAllCommnets(postId: string) {
-        const currentPost = await this.postService.getOnePost(postId)
-        return await Promise.all(currentPost.commentsId.map((comment) => this.commentModel.findById(comment)))
+        const currentComments = await (await this.postService.getOnePost(postId)).commentsId
+        return await this.commentModel.find({ id: { $in: currentComments } })
     }
 
     async getOneComment(cmtId: string) {
@@ -39,3 +39,6 @@ export class CommnetService {
         return await this.commentModel.findByIdAndDelete(cmtId)
     }
 }
+
+//add fr user req acp / deci
+// search user 

@@ -20,4 +20,8 @@ export class UserService {
         }
 
     }
+
+    async findUserByCond(searchString: string) {
+        return await this.userModel.find({ username: { $regex: searchString } })
+    }
 }
