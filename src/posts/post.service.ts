@@ -37,6 +37,12 @@ export class PostService {
         return newFeed
     }
 
+    async isFriend(currentUserId: string, userPostId: string) {
+        const user = await this.userService.findById(userPostId)
+        const check = user.friends.find((friend) => friend === currentUserId)
+        return check
+    }
+
     async getPostsByUserId(userId: string) {
         return await this.postModel.find({ userId })
     }

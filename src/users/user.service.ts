@@ -30,5 +30,9 @@ export class UserService {
     async findUserByCond(searchString: string) {
         return await this.userModel.find({ searching: { $regex: searchString } })
     }
+
+    async getUsersByCond(userIds: string[]) {
+        console.log(userIds)
+        return await this.userModel.find({ _id: { $in: userIds } })
+    }
 }
-//add pro searching

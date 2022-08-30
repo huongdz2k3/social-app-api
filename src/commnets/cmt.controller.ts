@@ -15,9 +15,9 @@ export class CommnetController {
 
     @Get()
     @UseGuards(JwtAuthGuard)
-    async getAllCommnet(@Param() ids: any) {
+    async getAllCommnet(@Param() ids: any, @Request() req) {
         ids = Object.values(ids)
-        return await this.commnetService.getAllCommnets(ids)
+        return await this.commnetService.getAllCommnets(ids, req.user.id)
     }
 
     @Get(':id')
