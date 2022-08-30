@@ -8,13 +8,14 @@ import { Post } from "./post.model";
 @Injectable()
 export class PostService {
     constructor(@InjectModel('Post') private readonly postModel: Model<Post>, private readonly userService: UserService) { }
-    async createPost(createPostDto: createPostDto, email: string, img?: string) {
+    async createPost(createPostDto: createPostDto, email: string, userId: string, img?: string) {
         const [newPost, currentUser] = await Promise.all([
             this.postModel.create({
                 title: createPostDto.title,
                 content: createPostDto.content,
                 userEmail: email,
-                img: img
+                img: img,
+                userId: userId
             }),
             this.userService.findOne(email)
         ])
@@ -23,11 +24,22 @@ export class PostService {
         return newPost
     }
 
-    async getAllPosts() {
-        const posts = await this.postModel.find()
-        return posts
+    async getAllPosts(email: string) {
+        let newFeed = []
+        const currentUser = await this.userService.findOne(email)
+        newFeed.push(this.getPostsByUserId(currentUser.id))
+        const listFriends = currentUser.friends
+        listFriends.forEach((friendId) => {
+            const posts = this.getPostsByUserId(friendId)
+            newFeed.push(posts)
+        })
+        newFeed = await Promise.all(newFeed)
+        return newFeed
     }
 
+    async getPostsByUserId(userId: string) {
+        return await this.postModel.find({ userId })
+    }
     async getOnePost(id: string) {
         return await this.postModel.findById(id)
     }

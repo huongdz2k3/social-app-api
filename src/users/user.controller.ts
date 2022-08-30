@@ -19,11 +19,11 @@ export class UserController {
         return await this.friendsReqService.sendReq(req?.user?.email, userId)
     }
 
-    @Patch('friends/requests/:status/:reqId')
+    @Patch('friends/requests/:id')
     @UseGuards(JwtAuthGuard)
-    async updateFriendReq(@Param() param: string, @Request() req) {
-        const [status, reqId] = Object.values(param)
-        return await this.friendsReqService.updateReq(reqId, status, req?.user?.email)
+    async updateFriendReq(@Param() userReqId: string, @Body() status: string, @Request() req) {
+        status = Object.values(status)[0]
+        userReqId = Object.values(userReqId)[0]
+        return await this.friendsReqService.updateReq(userReqId, status, req?.user?.email)
     }
-
 }

@@ -13,5 +13,5 @@ export class SignUpDto {
     address: string
     @IsNotEmpty()
     gender: string
-
+    searching: string
 }

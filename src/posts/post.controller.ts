@@ -22,12 +22,12 @@ export class PostController {
         })
     }))
     async createPost(@Body() createPostDto: createPostDto, @Request() req, @UploadedFile() file: Express.Multer.File) {
-        return await this.postService.createPost(createPostDto, req.user.email, file?.filename)
+        return await this.postService.createPost(createPostDto, req.user.email, req.user.id, file?.filename)
     }
     @Get()
     @UseGuards(JwtAuthGuard)
-    async getAllPosts() {
-        return await this.postService.getAllPosts()
+    async getAllPosts(@Request() req) {
+        return await this.postService.getAllPosts(req?.user?.email)
     }
 
     @Get(':id')

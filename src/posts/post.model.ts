@@ -9,6 +9,8 @@ export class Post {
     @Prop()
     userEmail: string
     @Prop()
+    userId: string
+    @Prop()
     img: [string]
     @Prop()
     commentsId: [string]

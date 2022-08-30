@@ -7,7 +7,7 @@ export class FriendsReq {
     userreq: string
     @Prop()
     userreceipt: string
-    @Prop({ default: " requested" })
+    @Prop({ default: "requested" })
     status: string
 }
 export const FriendsReqSchema = SchemaFactory.createForClass(FriendsReq)

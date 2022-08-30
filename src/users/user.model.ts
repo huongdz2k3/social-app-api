@@ -20,6 +20,8 @@ export class User {
     posts: [string]
     @Prop()
     friends: [string]
+    @Prop()
+    searching: string
 }
 const UserSchema = SchemaFactory.createForClass(User)
 
