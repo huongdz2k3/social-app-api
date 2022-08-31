@@ -32,9 +32,9 @@ export class PostController {
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)
-    async getOnePost(@Param() id: string) {
+    async getOnePost(@Param() id: string, @Request() req) {
         id = Object.values(id)[0]
-        return await this.postService.getOnePost(id)
+        return await this.postService.getPost(id, req.user.id)
     }
 
     @Delete(':id')
@@ -44,10 +44,16 @@ export class PostController {
         return await this.postService.deleteOnePost(id)
     }
 
-    @Patch('id')
+    @Patch(':id')
     @UseGuards(JwtAuthGuard)
     async updateOnePost(@Param() id: string, @Body() updatePostDto: createPostDto) {
         id = Object.values(id)[0]
         return await this.postService.updateOnePost(id, updatePostDto)
+    }
+
+    @Patch(':id/like')
+    @UseGuards(JwtAuthGuard)
+    async likedPost(@Param() id: string, @Request() req) {
+        return this.postService.likePost(id, req?.user.id)
     }
 }

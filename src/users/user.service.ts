@@ -32,7 +32,6 @@ export class UserService {
     }
 
     async getUsersByCond(userIds: string[]) {
-        console.log(userIds)
         return await this.userModel.find({ _id: { $in: userIds } })
     }
 }

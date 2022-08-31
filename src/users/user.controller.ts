@@ -12,26 +12,26 @@ export class UserController {
         return await this.userService.findUserByCond(searchString.searchString)
     }
 
-    @Post('friends/requests/:id')
+    @Post('friends/request')
     @UseGuards(JwtAuthGuard)
-    async addFriendReq(@Param() userId: string, @Request() req) {
+    async addFriendReq(@Body() userId: string, @Request() req) {
         userId = Object.values(userId)[0]
         return await this.friendsReqService.sendReq(req?.user?.id, userId)
     }
 
-    @Patch('friends/request/:id')
+    @Patch('friends/request')
     @UseGuards(JwtAuthGuard)
-    async updateFriendReq(@Param() userReqId: string, @Body() status: string, @Request() req) {
-        status = Object.values(status)[0]
-        userReqId = Object.values(userReqId)[0]
-        return await this.friendsReqService.updateReq(userReqId, status, req?.user?.email)
+    async updateFriendReq(@Body() body: string, @Request() req) {
+        const [status, userReqId] = Object.values(body)
+        return await this.friendsReqService.updateReq(userReqId, status, req?.user?.email, req?.user?.id)
     }
 
-    @Patch('friends/requests/:status')
+    @Patch('friends/requests')
     @UseGuards(JwtAuthGuard)
-    async updateFriendReqs(@Param() status: string, @Body() userIdReqs: any, @Request() req) {
-        status = Object.values(status)[0]
-        userIdReqs = Object.values(userIdReqs)
-        return await this.friendsReqService.updateReqs(userIdReqs, status, req?.user?.email, req?.user?.id)
+    async updateFriendReqs(@Body() body: any, @Request() req) {
+        const [ids, status] = Object.values(body)
+        return await this.friendsReqService.updateReqs(ids, status, req?.user?.email, req?.user?.id)
     }
 }
+
+// like , share (type post) , socket (not reload)

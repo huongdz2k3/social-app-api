@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { UserService } from "src/users/user.service";
@@ -46,8 +46,18 @@ export class PostService {
     async getPostsByUserId(userId: string) {
         return await this.postModel.find({ userId })
     }
+
+    async getPost(id: string, userId: string) {
+        const post = await this.postModel.findOne({ id })
+        const check = await this.isFriend(userId, post?.userId)
+        if (!check) {
+            throw new BadRequestException('You can not see this post')
+        }
+        return post
+    }
+
     async getOnePost(id: string) {
-        return await this.postModel.findById(id)
+        return await this.postModel.findOne({ id })
     }
 
     async deleteOnePost(id: string) {
@@ -57,4 +67,16 @@ export class PostService {
     async updateOnePost(id: string, updatePostDto: createPostDto) {
         return await this.postModel.findByIdAndUpdate(id, updatePostDto)
     }
+
+    async likePost(id: string, userId: string) {
+        const post = await this.getOnePost(id)
+        const check = post.liked.find((id) => userId === id)
+        if (check) {
+            throw new BadRequestException('You liked this post')
+        }
+        post.liked.push(userId)
+        post.save()
+        return post
+    }
+
 }

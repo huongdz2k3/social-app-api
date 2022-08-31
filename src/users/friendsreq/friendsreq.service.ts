@@ -20,7 +20,7 @@ export class FriendsReqService {
         return await this.friendsReqModel.findOne({ userreq, userreceipt })
     }
 
-    async updateReq(userReqId: string, status: string, email: string) {
+    async updateReq(userReqId: string, status: string, email: string, currentUserId: string) {
         if (status === "accepted") {
             const [currentUser, requestUser] = await Promise.all([
                 this.userService.findOne(email),
@@ -31,13 +31,12 @@ export class FriendsReqService {
             await currentUser.save()
             await requestUser.save()
         }
-        return await this.friendsReqModel.findOneAndDelete({ userreq: userReqId, userreceipt: email })
+        return await this.friendsReqModel.findOneAndDelete({ userreq: userReqId, userreceipt: currentUserId })
     }
 
     async updateReqs(userReqsId: [string], status: string, email: string, userId: string) {
         if (status === "accepted") {
             const [users, currentUser] = await Promise.all([this.userService.getUsersByCond(userReqsId), this.userService.findOne(email)])
-            console.log(users)
             currentUser.friends.push(...userReqsId)
             await currentUser.save()
             users.forEach(async (user) => {

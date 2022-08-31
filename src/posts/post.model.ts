@@ -14,6 +14,8 @@ export class Post {
     img: [string]
     @Prop()
     commentsId: [string]
+    @Prop()
+    liked: [string]
 }
 const PostSchema = SchemaFactory.createForClass(Post)
 
