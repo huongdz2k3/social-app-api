@@ -24,6 +24,11 @@ export class PostService {
         return newPost
     }
 
+    async getPostAfterCreate(email: string) {
+        const currentUser = await this.userService.findOne(email)
+        const newPost = await await this.postModel.findOne({ _id: currentUser.posts[currentUser.posts.length - 1] })
+        return newPost
+    }
     async getAllPosts(email: string) {
         let newFeed = []
         const currentUser = await this.userService.findOne(email)
@@ -57,7 +62,7 @@ export class PostService {
     }
 
     async getOnePost(id: string) {
-        return await this.postModel.findOne({ id })
+        return await this.postModel.findById(id)
     }
 
     async deleteOnePost(id: string) {
@@ -79,4 +84,21 @@ export class PostService {
         return post
     }
 
+    async sharePost(id: string, userShareId: string, contentShared: string) {
+        const post = await this.getOnePost(id)
+        const currentUser = await this.userService.findById(userShareId)
+        const postShare = await this.postModel.create({
+            title: post.title,
+            content: post.content,
+            userId: post.userId,
+            userEmail: post.userEmail,
+            img: post.img,
+            type: "shared",
+            contentShared,
+            userShareId
+        })
+        currentUser.posts.push(postShare.id)
+        await currentUser.save()
+        return postShare
+    }
 }

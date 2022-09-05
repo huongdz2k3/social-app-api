@@ -16,6 +16,12 @@ export class Post {
     commentsId: [string]
     @Prop()
     liked: [string]
+    @Prop({ default: 'post' })
+    type: string
+    @Prop()
+    contentShared: string
+    @Prop()
+    userShareId: string
 }
 const PostSchema = SchemaFactory.createForClass(Post)
 

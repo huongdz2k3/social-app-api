@@ -34,7 +34,7 @@ export class FriendsReqService {
         return await this.friendsReqModel.findOneAndDelete({ userreq: userReqId, userreceipt: currentUserId })
     }
 
-    async updateReqs(userReqsId: [string], status: string, email: string, userId: string) {
+    async updateReqs(userReqsId: any, status: any, email: string, userId: string) {
         if (status === "accepted") {
             const [users, currentUser] = await Promise.all([this.userService.getUsersByCond(userReqsId), this.userService.findOne(email)])
             currentUser.friends.push(...userReqsId)

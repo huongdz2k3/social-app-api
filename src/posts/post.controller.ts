@@ -1,14 +1,25 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request, Sse, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { diskStorage } from "multer";
 import { extname } from "path";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { createPostDto } from "./dto/createPost.dto";
 import { PostService } from "./post.service";
+import { Server } from 'socket.io';
 
 @Controller('post')
 export class PostController {
     constructor(private readonly postService: PostService) { }
+    @WebSocketServer()
+    server: Server;
+
+    // onModuleInit() {
+    //     this.server.on('connection', (socket) => {
+    //         console.log(socket.id)
+    //     })
+    // }
+
     @Post('/')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('file', {
@@ -22,7 +33,8 @@ export class PostController {
         })
     }))
     async createPost(@Body() createPostDto: createPostDto, @Request() req, @UploadedFile() file: Express.Multer.File) {
-        return await this.postService.createPost(createPostDto, req.user.email, req.user.id, file?.filename)
+        const newPost = await this.postService.createPost(createPostDto, req.user.email, req.user.id, file?.filename)
+        return newPost
     }
     @Get()
     @UseGuards(JwtAuthGuard)
@@ -54,6 +66,17 @@ export class PostController {
     @Patch(':id/like')
     @UseGuards(JwtAuthGuard)
     async likedPost(@Param() id: string, @Request() req) {
+        id = Object.values(id)[0]
         return this.postService.likePost(id, req?.user.id)
     }
+
+    @Post(':id/share')
+    @UseGuards(JwtAuthGuard)
+    async sharePost(@Param() id: string, @Body() content: string, @Request() req) {
+        content = Object.values(content)[0]
+        id = Object.values(id)[0]
+        return await this.postService.sharePost(id, req.user.id, content)
+    }
+
+
 }

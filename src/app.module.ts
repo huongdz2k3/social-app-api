@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CommnetModule } from './commnets/cmt.module';
+import { EventsModule } from './posts/events/events.module';
 import { PostModule } from './posts/post.module';
 import { FriendsReqModule } from './users/friendsreq/friendsreq.module';
 import { UserModule } from './users/user.module';
@@ -15,7 +16,8 @@ import { UserModule } from './users/user.module';
     UserModule,
     PostModule,
     CommnetModule,
-    FriendsReqModule
+    FriendsReqModule,
+    EventsModule
   ],
   controllers: [AppController],
   providers: [AppService],
