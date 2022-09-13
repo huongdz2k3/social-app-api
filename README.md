@@ -45,6 +45,9 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Watch API
+http://localhost:3000/api
+
 ## Test
 
 ```bash
